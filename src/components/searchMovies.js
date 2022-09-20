@@ -28,16 +28,7 @@ const SearchMovies = () => {
 
   const movieList = movies
     .filter((movie) => movie.poster_path)
-    .map((movie) => (
-      <MovieCard
-        key={movie.id}
-        poster_path={movie.poster_path}
-        title={movie.title}
-        release_date={movie.release_date}
-        vote_average={movie.vote_average}
-        overview={movie.overview}
-      />
-    ));
+    .map((movie) => <MovieCard key={movie.id} movie={movie} />);
 
   const myMovies = movies.length === 0 ? <h2>No Movies Found</h2> : movieList;
 

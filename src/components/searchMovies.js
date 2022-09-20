@@ -1,15 +1,67 @@
-import "../styles/searchMovies.css"
+import { useState } from "react";
+import "../styles/searchMovies.css";
 
-const SearchMovies = () => (
-  <form className="form">
-    <label htmlFor="query" className="label">
-      Movie Name
-    </label>
-    <input className="input" type="text" name="query" placeholder="my input" />
-    <button className="button" type="submit">
-      Search
-    </button>
-  </form>
-);
+const SearchMovies = () => {
+  const [query, setQuery] = useState("");
+  const [movies, setMovies] = useState([]);
+
+  const searchMovie = async (e) => {
+    e.preventDefault();
+
+    const url = `https://api.themoviedb.org/3/search/movie?api_key=87919f386ab96ad193018d6c91f59bcf&language=en-US&query=${query}&page=1&include_adult=false`;
+
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      const { results } = data;
+      setMovies(results);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleChange = (e) => {
+    const { value } = e.target;
+    setQuery(value);
+  };
+
+  const movieList = movies
+    .filter((movie) => movie.poster_path)
+    .map((movie) => (
+      <div key={movie.id} className="card">
+        <img
+          className="card--image"
+          src={`https://image.tmdb.org/t/p/w185_and_h278_bestv2/${movie.poster_path}`}
+          alt={movie.title + " poster"}
+        />
+      </div>
+    ));
+
+  console.log(movies);
+
+  const myMovies = movies.length === 0 ? <h2>No Movies Found</h2> : movieList;
+
+  return (
+    <>
+      <form className="form" onSubmit={searchMovie}>
+        <label htmlFor="query" className="label">
+          Movie Name
+        </label>
+        <input
+          className="input"
+          type="text"
+          name="query"
+          placeholder="i.e Jurassic Park"
+          value={query}
+          onChange={handleChange}
+        />
+        <button className="button" type="submit">
+          Search
+        </button>
+      </form>
+      <div className="card-list">{myMovies}</div>
+    </>
+  );
+};
 
 export default SearchMovies;

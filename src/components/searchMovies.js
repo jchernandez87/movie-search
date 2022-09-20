@@ -1,4 +1,5 @@
 import { useState } from "react";
+import MovieCard from "./movieCard";
 import "../styles/searchMovies.css";
 
 const SearchMovies = () => {
@@ -28,16 +29,15 @@ const SearchMovies = () => {
   const movieList = movies
     .filter((movie) => movie.poster_path)
     .map((movie) => (
-      <div key={movie.id} className="card">
-        <img
-          className="card--image"
-          src={`https://image.tmdb.org/t/p/w185_and_h278_bestv2/${movie.poster_path}`}
-          alt={movie.title + " poster"}
-        />
-      </div>
+      <MovieCard
+        key={movie.id}
+        poster_path={movie.poster_path}
+        title={movie.title}
+        release_date={movie.release_date}
+        vote_average={movie.vote_average}
+        overview={movie.overview}
+      />
     ));
-
-  console.log(movies);
 
   const myMovies = movies.length === 0 ? <h2>No Movies Found</h2> : movieList;
 
